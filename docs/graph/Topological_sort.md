@@ -41,6 +41,102 @@ topological_sort(self):
 
 ## Code
 
+### C++ Implementation
+
+```C++
+
+#include <iostream>
+#include <list>
+#include <stack>
+using namespace std;
+
+class Graph {
+    // No. of vertices'
+    int V;
+    // Pointer to an array containing adjacency listsList
+    list<int>* adj;
+    // A function used by topologicalSort
+    void topologicalSortUtil(int v, bool visited[],
+                             stack<int>& Stack);
+ 
+public:
+    Graph(int V);
+    // function to add an edge to graph
+    void addEdge(int v, int w);
+    // prints a Topological Sort of
+    // the complete graph
+    void topologicalSort();
+};
+ 
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+ 
+void Graph::addEdge(int v, int w)
+{
+    // Add w to v’s list.
+    adj[v].push_back(w);
+}
+ 
+// A recursive function used by topologicalSort
+void Graph::topologicalSortUtil(int v, bool visited[],
+                                stack<int>& Stack)
+{
+    // Mark the current node as visited.
+    visited[v] = true;
+    // Recur for all the vertices
+    // adjacent to this vertex
+    list<int>::iterator i;
+    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            topologicalSortUtil(*i, visited, Stack);
+    // Push current vertex to stack
+    // which stores result
+    Stack.push(v);
+}
+ 
+// The function to do Topological Sort.
+// It uses recursive topologicalSortUtil()
+void Graph::topologicalSort()
+{
+    stack<int> Stack;
+    // Mark all the vertices as not visited
+    bool* visited = new bool[V];
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+    // Call the recursive helper function
+    // to store Topological
+    // Sort starting from all
+    // vertices one by one
+    for (int i = 0; i < V; i++)
+        if (visited[i] == false)
+            topologicalSortUtil(i, visited, Stack);
+    // Print contents of stack
+    while (Stack.empty() == false) {
+        cout << Stack.top() << " ";
+        Stack.pop();
+    }
+}
+ 
+int main()
+{
+    Graph g(6);
+    g.addEdge(5, 2);
+    g.addEdge(5, 0);
+    g.addEdge(4, 0);
+    g.addEdge(4, 1);
+    g.addEdge(2, 3);
+    g.addEdge(3, 1);
+    cout << "Following is a Topological Sort of the given "
+            "graph \n";
+    g.topologicalSort();
+    return 0;
+}
+
+```
+
 ### Python Implementation
 
 ```python
@@ -100,8 +196,79 @@ graph.topological_sort()
 
 
 ```
+### Java Implementation
 
+```java
 
+public class TopologicalSort {
+
+    static Set<Integer> recStac;
+    static Set<Integer> visited;
+    static Stack<Integer> res;
+    static ArrayList[] adj;
+    public static int[] solve(int A, int[][] B) {
+        recStac = new HashSet();
+        visited = new HashSet();
+        res = new Stack();
+        adj = new ArrayList[A+1];
+        
+        for(int i=0; i<= A; i++){
+            adj[i] = new ArrayList();
+        }
+        
+        for(int i=0; i<B.length; i++){
+            adj[B[i][0]].add(B[i][1]);
+        }
+        boolean ans = false;
+        for(int i=1; i<=A;i++){
+            // if(adj[i].size() <= 0) continue;
+            if(visited.contains(i)) continue;
+            ans = dfs(i);
+            if(ans == true){
+                return new int[0];
+            }
+        }
+        
+        int[] result = new int[A];
+        int i=A-1;
+        while(!res.isEmpty()){
+            result[i--] = res.pop();
+        }
+        return result;
+    }
+    
+    public static boolean dfs(int cur){
+        if(recStac.contains(cur)){
+            return true;
+        }
+        if(visited.contains(cur)){
+            return false;
+        }
+        
+        visited.add(cur);
+        recStac.add(cur);
+        PriorityQueue<Integer> minheap = new PriorityQueue();
+        minheap.addAll(adj[cur]);
+        while(!minheap.isEmpty()){
+            int next = (int)minheap.poll();
+            if(dfs(next)){
+                return true;
+            }
+        }
+        res.push(cur);
+        recStac.remove(cur);
+        return false;
+    }
+    
+    public static void main(String[] args){
+      int no_of_nodes = 6;
+      int[][] directed_edges = { {6, 3}, {6, 1}, {5, 1}, {5, 2}, {3, 4}, {4, 2} };
+      System.out.printf(Arrays.toString(solve(no_of_nodes, directed_edges)));
+    }
+    
+}
+
+```
 
 ## Time Complexity
 

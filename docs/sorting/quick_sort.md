@@ -84,8 +84,60 @@ void quickSort(int arr[], int low, int high)
 } 
 
 ```
+### JAVA Implementation
 
+```java
 
+int partition(int[] arr, int low, int high)
+{
+      
+    // pivot
+    int pivot = arr[high]; 
+      
+    // Index of smaller element and
+    // indicates the right position
+    // of pivot found so far
+    int i = (low - 1); 
+  
+    for(int j = low; j <= high - 1; j++)
+    {
+          
+        // If current element is smaller 
+        // than the pivot
+        if (arr[j] < pivot) 
+        {
+              
+            // Increment index of 
+            // smaller element
+            i++; 
+            swap(arr, i, j);
+        }
+    }
+    swap(arr, i + 1, high);
+    return (i + 1);
+}
+  
+/* The main function that implements QuickSort
+          arr[] --> Array to be sorted,
+          low --> Starting index,
+          high --> Ending index
+ */
+void quickSort(int[] arr, int low, int high)
+{
+    if (low < high) 
+    {
+          
+        // pi is partitioning index, arr[p]
+        // is now at right place 
+        int pi = partition(arr, low, high);
+  
+        // Separately sort elements before
+        // partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+```
 
 ### Python Implementation
 
@@ -137,8 +189,44 @@ def quick_sort(start, end, array):
         quick_sort(start, p - 1, array)
         quick_sort(p + 1, end, array)
 ```
+### JavaScript Implementation
 
+```javascript
 
+function quickSortIterative(arr) {
+    // Creating an array that we'll use as a stack, using the push() and pop() functions
+    stack = [];
+    
+    // Adding the entire initial array as an "unsorted subarray"
+    stack.push(0);
+    stack.push(arr.length - 1);
+    
+    // There isn't an explicit peek() function
+    // The loop repeats as long as we have unsorted subarrays
+    while(stack[stack.length - 1] >= 0){
+        
+        // Extracting the top unsorted subarray
+    	end = stack.pop();
+        start = stack.pop();
+        
+        pivotIndex = partition(arr, start, end);
+        
+        // If there are unsorted elements to the "left" of the pivot,
+        // we add that subarray to the stack so we can sort it later
+        if (pivotIndex - 1 > start){
+        	stack.push(start);
+            stack.push(pivotIndex - 1);
+		}
+        
+        // If there are unsorted elements to the "right" of the pivot,
+        // we add that subarray to the stack so we can sort it later
+        if (pivotIndex + 1 < end){
+        	stack.push(pivotIndex + 1);
+            stack.push(end);
+        }
+    }
+}
+```
 
 ### C Implementation
 
