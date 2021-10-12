@@ -145,6 +145,44 @@ function binarySearch(Arr, key){
 }
 ```
 
+### C Implementation
+```c
+int binarySearch(int arr[], int left, int right, int search)
+{
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+  
+        if (arr[mid] == search)
+            return mid;
+  
+        if (arr[mid] < search)
+            left = mid + 1;
+  
+        else
+            right = mid - 1;
+    }
+    return -1;
+```
+
+## Swift Implementation
+```swift
+func binarySearch(array: [Int], lhs: Int, rhs: Int, target: Int) -> Int? {
+    if rhs >= lhs {
+        let mid = Int((rhs + lhs) / 2)
+
+        if array[mid] == target {
+            return mid
+        } else if array[mid] > target {
+            return binarySearch(array: array, lhs: lhs, rhs: mid - 1, target: target)
+        } else{
+            return binarySearch(array: array, lhs: mid + 1, rhs: rhs, target: target)
+        }
+    } else {
+        return nil
+    }
+}
+```
+
 ## Time Complexity
 
 The time complexity of the above algorithm is O(logN).
